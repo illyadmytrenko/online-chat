@@ -30,7 +30,8 @@ export const MessagesProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   useEffect(() => {
-    socket = io('http://localhost:4000');
+    // socket = io('http://localhost:4000');
+    socket = io('wss://mychat-backend.onrender.com');
 
     socket.on('initMessages', (msgs: Message[]) => {
       setMessages(msgs);
