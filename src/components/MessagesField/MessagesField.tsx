@@ -3,14 +3,13 @@ import { SearchContext } from '../../context/SearchContext';
 
 import type MessageType from '../../types/Message';
 import { Message } from '../MessagesField/Message/Message';
-import type User from '../../types/User';
 
 export const MessagesField = ({
   messages,
-  receiverUser,
+  receiverId,
 }: {
   messages: MessageType[];
-  receiverUser: User;
+  receiverId: string;
 }) => {
   const { searchString } = useContext(SearchContext);
 
@@ -30,7 +29,7 @@ export const MessagesField = ({
       {messages.map((msg, index) => {
         const isHighlighted = searchString !== '' && msg.text.includes(searchString.trim());
         return (
-          (receiverUser.userId === msg.receiverId || receiverUser.userId === msg.senderId) && (
+          (receiverId === msg.receiverId || receiverId === msg.senderId) && (
             <div
               key={index}
               ref={isHighlighted ? highlightedRef : null}

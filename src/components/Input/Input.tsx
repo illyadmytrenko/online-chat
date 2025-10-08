@@ -5,7 +5,7 @@ import sendIcon from '../../assets/send.webp';
 import emojiIcon from '../../assets/emoji.svg';
 
 export const InputComponent = () => {
-  const { sendPrivateMessage, receiverUser } = useContext(MessagesContext);
+  const { sendPrivateMessage, receiverId, setIsNewMessageSent } = useContext(MessagesContext);
 
   const [value, setValue] = useState('');
 
@@ -13,8 +13,13 @@ export const InputComponent = () => {
     e.preventDefault();
     if (!value.trim()) return;
 
-    sendPrivateMessage(receiverUser.userId, value);
+    sendPrivateMessage(receiverId, value);
     setValue('');
+
+    setIsNewMessageSent(true);
+    setTimeout(() => {
+      setIsNewMessageSent(false);
+    }, 10);
   };
 
   return (

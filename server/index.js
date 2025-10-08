@@ -9,6 +9,9 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import cookie from 'cookie';
 import jwt from 'jsonwebtoken';
+import User from './models/User.js';
+
+const onlineUsers = {};
 
 dotenv.config();
 
@@ -63,6 +66,9 @@ io.on('connection', async (socket) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     socket.userId = decoded.id;
     console.log('👤 Подключён пользователь:', socket.userId);
+
+    onlineUsers[socket.userId] = socket.id;
+    io.emit('onlineUsers', Object.keys(onlineUsers));
   } catch (err) {
     console.error('❌ Ошибка JWT:', err.message);
     socket.disconnect();
@@ -106,8 +112,18 @@ io.on('connection', async (socket) => {
     }
   });
 
-  socket.on('disconnect', () => {
+  socket.on('disconnect', async () => {
     console.log('🔴 Отключился:', socket.userId || socket.id);
+    if (socket.userId) {
+      await User.findOneAndUpdate(
+        { userId: socket.userId },
+        {
+          lastActive: new Date(),
+        },
+      );
+    }
+    delete onlineUsers[socket.userId];
+    io.emit('onlineUsers', Object.keys(onlineUsers));
   });
 });
 

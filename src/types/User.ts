@@ -3,4 +3,5 @@ export default interface User {
   userName: string;
   userNickname: string;
   userEmail: string;
+  lastActive: string | null;
 }

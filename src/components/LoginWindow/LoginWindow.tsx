@@ -46,6 +46,7 @@ export const LoginWindow = () => {
         setIsLoginWindow(false);
       }
       reset();
+      window.location.reload();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       setServerError(error.response.data.message);

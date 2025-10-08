@@ -2,33 +2,37 @@ import { createContext, useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import { io, Socket } from 'socket.io-client';
 import type Message from '../types/Message';
-import type User from '../types/User';
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const MessagesContext = createContext<{
   messages: Message[];
   sendPrivateMessage: (receiverId: string, text: string) => void;
-  receiverUser: User;
-  setReceiverUser: (receiverUser: User) => void;
+  receiverId: string;
+  setReceiverId: (receiverId: string) => void;
+  isNewMessageSent: boolean;
+  setIsNewMessageSent: (isMessageSent: boolean) => void;
 }>({
   messages: [],
   sendPrivateMessage: () => {},
-  receiverUser: {} as User,
-  setReceiverUser: () => {},
+  receiverId: '',
+  setReceiverId: () => {},
+  isNewMessageSent: false,
+  setIsNewMessageSent: () => {},
 });
 
 let socket: Socket;
 
 export const MessagesProvider = ({ children }: { children: ReactNode }) => {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [receiverUser, setReceiverUser] = useState<User>({} as User);
+  const [receiverId, setReceiverId] = useState('');
+  const [isNewMessageSent, setIsNewMessageSent] = useState(false);
 
   useEffect(() => {
-    socket = io('http://localhost:5050', {
-      withCredentials: true,
-      transports: ['websocket'],
-    });
-    // socket = io('https://online-chat-illya.onrender.com');
+    // socket = io('http://localhost:5050', {
+    //   withCredentials: true,
+    //   transports: ['websocket'],
+    // });
+    socket = io('https://online-chat-illya.onrender.com');
 
     socket.on('initMessages', (msgs: Message[]) => {
       setMessages(msgs);
@@ -49,7 +53,14 @@ export const MessagesProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <MessagesContext.Provider
-      value={{ messages, sendPrivateMessage, receiverUser, setReceiverUser }}
+      value={{
+        messages,
+        sendPrivateMessage,
+        receiverId,
+        setReceiverId,
+        isNewMessageSent,
+        setIsNewMessageSent,
+      }}
     >
       {children}
     </MessagesContext.Provider>

@@ -8,7 +8,7 @@ import { ChatTopPanel } from '../ChatTopPanel/ChatTopPanel';
 import chatBg from '../../assets/chat-bg.webp';
 
 export const ChatField = () => {
-  const { messages, receiverUser } = useContext(MessagesContext);
+  const { messages, receiverId } = useContext(MessagesContext);
 
   return (
     <div
@@ -16,11 +16,11 @@ export const ChatField = () => {
       style={{ backgroundImage: `url(${chatBg})` }}
     >
       <div className="h-full w-[75vw] absolute left-[25vw] inset-0 bg-purple-900/60 mix-blend-multiply pointer-events-none" />
-      {receiverUser.userId && <ChatTopPanel receiverUser={receiverUser} />}
+      {receiverId && <ChatTopPanel receiverId={receiverId} />}
       <div className="h-[100vh] flex flex-col justify-end flex-1 overflow-y-auto scroll-none px-10 pt-0">
-        <MessagesField messages={messages} receiverUser={receiverUser} />
+        <MessagesField messages={messages} receiverId={receiverId} />
       </div>
-      {receiverUser.userId && <InputComponent />}
+      {receiverId && <InputComponent />}
     </div>
   );
 };

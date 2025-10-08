@@ -1,16 +1,35 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { SearchContext } from '../../context/SearchContext';
 
 import defaultUserIcon from '../../assets/defaultUser.webp';
 import searchIcon from '../../assets/search.webp';
 import phoneIcon from '../../assets/phone.webp';
 import dotsIcon from '../../assets/dots.webp';
+import axios from 'axios';
 import type User from '../../types/User';
+import { UserContext } from '../../context/UserContext';
+import { formatLastTimeOnline } from '../../utils/formateLastTimeOnline';
 
-export const ChatTopPanel = ({ receiverUser }: { receiverUser: User }) => {
-  const [isSearch, setIsSearch] = useState(false);
+const serverUrl = import.meta.env.VITE_SERVER_URL;
 
+export const ChatTopPanel = ({ receiverId }: { receiverId: string }) => {
+  const { onlineUsersIds } = useContext(UserContext);
   const { setSearchString } = useContext(SearchContext);
+
+  const [isSearch, setIsSearch] = useState(false);
+  const [user, setUser] = useState<User>({} as User);
+
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const { data } = await axios.get(`${serverUrl}/api/user/${receiverId}`);
+        setUser(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    getUser();
+  }, [receiverId]);
 
   const handleSearchButtonClick = () => {
     setIsSearch(!isSearch);
@@ -23,8 +42,12 @@ export const ChatTopPanel = ({ receiverUser }: { receiverUser: User }) => {
         <div className="flex items-center gap-2">
           <img src={defaultUserIcon} alt="default user icon" className="w-[40px] h-[40px]" />
           <div>
-            <h2 className="font-bold">{receiverUser.userName}</h2>
-            <h6>Last seen 5 minutes ago</h6>
+            <h2 className="font-bold">{user.userName}</h2>
+            <h6>
+              {onlineUsersIds.includes(receiverId)
+                ? 'Online'
+                : `Last time online: ${formatLastTimeOnline(user.lastActive || '')} `}
+            </h6>
           </div>
         </div>
         <div className="flex items-center gap-2">

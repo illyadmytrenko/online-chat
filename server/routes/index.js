@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import user from '../controllers/user.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
+import message from '../controllers/message.js';
 
 const router = Router();
 
@@ -14,5 +15,7 @@ router.get('/user/check-auth', authMiddleware, (req, res) => {
 });
 router.get(`/user/:userId`, user.getUser);
 router.get(`/user/nickname/:userNickname`, user.getUserByNickname);
+
+router.get('/message/:userId', message.getUsersChats);
 
 export default router;
