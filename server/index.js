@@ -16,7 +16,11 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: '*',
+    origin: [
+      'https://online-chat-illya.netlify.app',
+      'http://localhost:5173',
+      'http://localhost:5174',
+    ],
     methods: ['GET', 'POST'],
   },
 });
@@ -27,9 +31,9 @@ app.use(cookieParser());
 app.use(
   cors({
     origin: [
+      'https://online-chat-illya.netlify.app',
       'http://localhost:5173',
       'http://localhost:5174',
-      'https://online-chat-illya.netlify.app/',
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     preflightContinue: false,
