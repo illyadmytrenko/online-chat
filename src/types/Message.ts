@@ -1,4 +1,5 @@
 export default interface Message {
-  message: string;
+  text: string;
   senderId: string | null;
+  receiverId: string | null;
 }

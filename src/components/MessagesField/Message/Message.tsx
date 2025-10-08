@@ -1,17 +1,25 @@
 import { useContext } from 'react';
 
-import { MessagesContext } from '../../../context/MessagesContext';
+import { UserContext } from '../../../context/UserContext';
 
-export const Message = ({ message, senderId }: { message: string; senderId: string | null }) => {
-  const { userId } = useContext(MessagesContext);
+export const Message = ({
+  message,
+  senderId,
+  isHighlighted,
+}: {
+  message: string;
+  senderId: string | null;
+  isHighlighted?: boolean;
+}) => {
+  const { user } = useContext(UserContext);
 
-  const isMe = senderId === userId;
+  const isMe = senderId === user.userId;
   return (
-    <div className={`flex ${isMe ? 'justify-end' : 'justify-start'} mb-2`}>
+    <div className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
       <div
-        className={`px-3 py-2 rounded-lg max-w-[60%] break-words ${
-          isMe ? 'bg-amber-500 text-white self-end' : 'bg-gray-200 text-black self-start'
-        }`}
+        className={`max-w-[60%] px-3 py-2 rounded-lg break-words z-10 ${
+          isMe ? 'bg-[#9232d7] text-white self-end' : 'bg-gray-200 text-black self-start'
+        } ${isHighlighted ? ' p-1 animate-pulse rounded-lg bg-yellow-300 ' : ''}`}
       >
         {message}
       </div>
